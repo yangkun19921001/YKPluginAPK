@@ -1,9 +1,12 @@
 package com.devyk.pluginlib.proxy;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,10 +31,11 @@ public class ProxyActivity extends AppCompatActivity {
     /**
      * 需要加载插件的全类名
      */
-    protected String activityClassName ;
+    protected String activityClassName;
 
     private String TAG = this.getClass().getSimpleName();
     private IActivity iActivity;
+    private ProxyBroadcast receiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,17 +52,20 @@ public class ProxyActivity extends AppCompatActivity {
             Object pluginObj = constructor.newInstance(new Object[]{});
             if (pluginObj != null) {
                 iActivity = (IActivity) pluginObj;
-                iActivity.onActivityCreated(this,savedInstanceState);
+                iActivity.onActivityCreated(this, savedInstanceState);
             }
-        }catch (Exception e){
-            Log.e(TAG,e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
-
     }
 
 
-    private String getLoadClassName(){
+    private String getLoadClassName() {
         return getIntent().getStringExtra(Constants.ACTIVITY_CLASS_NAME);
+    }
+
+    private String getLoadClassName(Intent intent) {
+        return intent.getStringExtra(Constants.ACTIVITY_CLASS_NAME);
     }
 
     /**
@@ -66,14 +73,15 @@ public class ProxyActivity extends AppCompatActivity {
      */
     @Override
     public void startActivity(Intent intent) {
-        String className = getLoadClassName();
-        Intent proxyIntent = new Intent(this,ProxyActivity.class);
-        proxyIntent.putExtra(Constants.ACTIVITY_CLASS_NAME,className);
+        String className = getLoadClassName(intent);
+        Intent proxyIntent = new Intent(this, ProxyActivity.class);
+        proxyIntent.putExtra(Constants.ACTIVITY_CLASS_NAME, className);
         super.startActivity(proxyIntent);
     }
 
     /**
      * 获得插件中的 ClassLoader
+     *
      * @return
      */
     @Override
@@ -81,8 +89,28 @@ public class ProxyActivity extends AppCompatActivity {
         return PluginManager.getInstance().getPluginClassLoader();
     }
 
+    @Override
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        IntentFilter proxyIntentFilter = new IntentFilter();
+        for (int i = 0; i < filter.countActions(); i++) {
+            //内部是一个数组
+            proxyIntentFilter.addAction(filter.getAction(i));
+        }
+        //交给代理广播去注册
+        this.receiver = new ProxyBroadcast(receiver.getClass().getName(), this);
+        return super.registerReceiver(this.receiver, filter);
+    }
+
+    @Override
+    public void unregisterReceiver(BroadcastReceiver receive) {
+        Toast.makeText(getApplicationContext(), "取消广播注册成功", Toast.LENGTH_SHORT).show();
+        if (receiver != null)
+            super.unregisterReceiver(receiver);
+    }
+
     /**
      * 获取插件中的资源
+     *
      * @return
      */
     @Override
@@ -125,6 +153,6 @@ public class ProxyActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        iActivity.onActivitySaveInstanceState(this,outState);
+        iActivity.onActivitySaveInstanceState(this, outState);
     }
 }

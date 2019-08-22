@@ -17,6 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".PluginA_2" />
+
+        <receiver android:name=".PluginBroadReceiver" />
     </application>
 
 </manifest>

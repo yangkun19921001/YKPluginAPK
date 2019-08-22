@@ -14,6 +14,20 @@
         android:layout_height="match_parent" />
 
 
+    <Button
+        android:id="@+id/register"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注册广播" />
+
+    <Button
+        android:id="@+id/sendmessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送消息" />
+
+
 
 
 </RelativeLayout>

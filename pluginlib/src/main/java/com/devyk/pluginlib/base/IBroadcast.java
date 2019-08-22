@@ -1,5 +1,8 @@
 package com.devyk.pluginlib.base;
 
+import android.content.Context;
+import android.content.Intent;
+
 /**
  * <pre>
  *     author  : devyk on 2019-08-20 22:32
@@ -10,4 +13,17 @@ package com.devyk.pluginlib.base;
  * </pre>
  */
 public interface IBroadcast {
+
+    /**
+     * 通过插件来代理
+     * @param context
+     */
+    public void attach(Context context);
+
+    /**
+     * 通过插件来代理接收下发消息
+     * @param context
+     * @param intent
+     */
+    public void onReceive(Context context, Intent intent);
 }

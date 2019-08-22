@@ -19,7 +19,6 @@ import com.devyk.pluginlib.Constants;
 import com.devyk.pluginlib.base.IActivity;
 
 /**
- *
  * <pre>
  *     author  : devyk on 2019-08-20 22:33
  *     blog    : https://juejin.im/user/578259398ac2470061f3a3fb/posts
@@ -27,7 +26,6 @@ import com.devyk.pluginlib.base.IActivity;
  *     mailbox : yang1001yk@gmail.com
  *     desc    : This is BaseActivityImp
  * </pre>
- *
  */
 public class BaseActivityImp extends AppCompatActivity implements IActivity {
 
@@ -38,6 +36,13 @@ public class BaseActivityImp extends AppCompatActivity implements IActivity {
      */
     protected Activity that;
 
+    @Override
+    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle bundle) {
+        this.that = activity;
+
+        Log.i(TAG, "  onActivityCreated");
+        onCreate(bundle);
+    }
 
     /**
      * 通过 View 方式加载
@@ -114,6 +119,22 @@ public class BaseActivityImp extends AppCompatActivity implements IActivity {
             return super.registerReceiver(receiver, filter);
     }
 
+    @Override
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        if (that != null) {
+            that.unregisterReceiver(receiver);
+        } else
+            super.unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void sendBroadcast(Intent intent) {
+        if (that != null) {
+            that.sendBroadcast(intent);
+        } else
+            super.sendBroadcast(intent);
+    }
+
 
     /**
      * 通过代理去开启服务
@@ -148,13 +169,9 @@ public class BaseActivityImp extends AppCompatActivity implements IActivity {
     }
 
 
-
     @Override
-    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle bundle) {
-        this.that = activity;
-
-        Log.i(TAG, "  onActivityCreated");
-        onCreate(bundle);
+    public String getPackageName() {
+        return that.getPackageName();
     }
 
     @Override
@@ -195,7 +212,6 @@ public class BaseActivityImp extends AppCompatActivity implements IActivity {
         onDestroy();
 
     }
-
 
 
     @Override

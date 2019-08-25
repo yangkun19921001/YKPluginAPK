@@ -54,7 +54,7 @@ public class PluginManager {
     }
 
     /**
-     * 加载插件
+     * 加载插件 APK
      */
     public boolean loadPlugin(Context context, String filePath) {
         if (context == null || filePath == null || filePath.isEmpty())

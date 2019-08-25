@@ -1,6 +1,7 @@
 package com.devyk.pluginlib.proxy;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -68,6 +69,10 @@ public class ProxyActivity extends AppCompatActivity {
         return intent.getStringExtra(Constants.ACTIVITY_CLASS_NAME);
     }
 
+    private String getLoadServiceClassName(Intent intent) {
+        return intent.getStringExtra(Constants.SERVICE_CLASS_NAME);
+    }
+
     /**
      * 这里的 startActivity 是插件调用的
      */
@@ -77,6 +82,27 @@ public class ProxyActivity extends AppCompatActivity {
         Intent proxyIntent = new Intent(this, ProxyActivity.class);
         proxyIntent.putExtra(Constants.ACTIVITY_CLASS_NAME, className);
         super.startActivity(proxyIntent);
+    }
+
+    /**
+     * 加载插件中 启动服务
+     * @param service
+     * @return
+     */
+    @Override
+    public ComponentName startService(Intent service) {
+        String className = getLoadServiceClassName(service);
+        Intent intent = new Intent(this,ProxyService.class);
+        intent.putExtra(Constants.SERVICE_CLASS_NAME,className);
+        return super.startService(intent);
+    }
+
+    @Override
+    public boolean stopService(Intent name) {
+        String className = getLoadServiceClassName(name);
+        Intent intent = new Intent(this,ProxyService.class);
+        intent.putExtra(Constants.SERVICE_CLASS_NAME,className);
+        return super.stopService(intent);
     }
 
     /**

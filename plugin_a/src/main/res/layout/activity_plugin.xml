@@ -8,26 +8,35 @@
 
     <ImageView
         android:id="@+id/iv"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/car"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/car" />
 
 
     <Button
         android:id="@+id/register"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="注册广播" />
+
 
     <Button
         android:id="@+id/sendmessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/register"
+        android:layout_centerHorizontal="true"
         android:text="发送消息" />
 
 
-
+    <Button
+        android:id="@+id/startservice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sendmessage"
+        android:layout_centerHorizontal="true"
+        android:text="开启服务" />
 
 </RelativeLayout>

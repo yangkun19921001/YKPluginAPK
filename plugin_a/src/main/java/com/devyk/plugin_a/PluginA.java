@@ -12,6 +12,7 @@ import com.devyk.pluginlib.base.iml.BaseActivityImp;
 public class PluginA extends BaseActivityImp {
 
     private PluginBroadReceiver receiver;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +42,33 @@ public class PluginA extends BaseActivityImp {
             }
         });
 
+        findViewById(R.id.startservice).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startService();
+
+            }
+        });
+
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (receiver != null)
-            unregisterReceiver(receiver);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
 
+        if (intent != null) {
+            stopService(intent);
+        }
     }
 
     @Override
@@ -87,5 +101,13 @@ public class PluginA extends BaseActivityImp {
         intent.setAction("_DevYK");
         intent.putExtra("Message", getClass().getSimpleName());
         sendBroadcast(intent);
+    }
+
+    /**
+     * 绑定服务
+     */
+    public void startService() {
+        intent = new Intent(that, PluginService.class);
+        startService(intent);
     }
 }

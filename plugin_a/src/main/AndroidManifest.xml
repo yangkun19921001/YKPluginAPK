@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".PluginA_2" />
 
-        <receiver android:name=".PluginBroadReceiver" />
+        <!--<receiver android:name=".PluginBroadReceiver" />-->
+        <!--<service android:name=".PluginService" />-->
     </application>
 
 </manifest>

@@ -25,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(Constants.IPluginPath.PlugApkPath);
         if (!file.exists())
             file.mkdirs();
-        PluginManager.getInstance().loadPlugin(this, Constants.IPluginPath.PlugApkPath + "plugin.apk");
-        Toast.makeText(getApplicationContext(), "load_success", Toast.LENGTH_SHORT).show();
+        boolean isSuccess = PluginManager.getInstance().loadPlugin(this, Constants.IPluginPath.PlugApkPath + "plugin.apk");
+        Toast.makeText(getApplicationContext(), isSuccess == true ? "load_success" : "load_error", Toast.LENGTH_SHORT).show();
     }
 
+    //跳转插件
     public void toPluginA(View view) {
         if (PluginManager.getInstance().getPluginPackageInfo() != null) {
             if (PluginManager.getInstance().getPluginPackageInfo().activities.length > 0) {
@@ -36,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent toPa = new Intent(this, ProxyActivity.class);
                 toPa.putExtra(Constants.ACTIVITY_CLASS_NAME, className);
                 startActivity(toPa);
+                return;
             }
         }
+
+        Toast.makeText(getApplicationContext(),"确定是否已加载插件？",Toast.LENGTH_LONG).show();
     }
 
-    public void toPluginB(View view) {
-
-    }
 }

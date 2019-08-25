@@ -56,7 +56,7 @@ public class PluginManager {
     /**
      * 加载插件
      */
-    public void loadPlugin(Context context, String filePath) {
+    public boolean loadPlugin(Context context, String filePath) {
         if (context == null || filePath == null || filePath.isEmpty())
             throw new NullPointerException("context or filePath is null ?");
         this.mContext = context.getApplicationContext();
@@ -64,6 +64,9 @@ public class PluginManager {
         //拿到 包管理
         packageManager = mContext.getPackageManager();
 
+        if (getPluginPackageInfo(apkFilePath) == null) {
+            return false;
+        }
         //从包里获取 Activity
         pluginPackageInfo = getPluginPackageInfo(apkFilePath);
 
@@ -76,8 +79,11 @@ public class PluginManager {
 
         //通过 DexClassLoader 加载 apk 并通过 native 层解析 apk 输出 dex
         //第二个参数可以为 null 底层没有做处理
+        if (getPluginClassLoader(apkFilePath, mDexPath.getAbsolutePath()) == null || getPluginResources(filePath) == null)
+            return false;
         this.mDexClassLoader = getPluginClassLoader(apkFilePath, mDexPath.getAbsolutePath());
         this.mResources = getPluginResources(filePath);
+        return true;
 
     }
 
@@ -124,7 +130,6 @@ public class PluginManager {
     /**
      * 得到对应插件 APK 中的 加载器
      *
-
      * @return
      */
     public DexClassLoader getPluginClassLoader() {
@@ -135,15 +140,18 @@ public class PluginManager {
     /**
      * 得到插件 APK 中 包信息
      */
-    public PackageInfo getPluginPackageInfo(String apkFilePath){
-        return packageManager.getPackageArchiveInfo(apkFilePath, PackageManager.GET_ACTIVITIES);
-    }    /**
-     * 得到插件 APK 中 包信息
-     */
-    public PackageInfo getPluginPackageInfo(){
-        return getPluginPackageInfo(apkFilePath);
+    public PackageInfo getPluginPackageInfo(String apkFilePath) {
+        if (packageManager != null)
+            return packageManager.getPackageArchiveInfo(apkFilePath, PackageManager.GET_ACTIVITIES);
+    return null;
     }
 
+    /**
+     * 得到插件 APK 中 包信息
+     */
+    public PackageInfo getPluginPackageInfo() {
+        return getPluginPackageInfo(apkFilePath);
+    }
 
 
 }

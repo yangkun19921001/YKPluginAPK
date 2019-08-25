@@ -152,6 +152,16 @@ public class BaseActivityImp extends AppCompatActivity implements IActivity {
             return super.startService(service);
     }
 
+    @Override
+    public boolean stopService(Intent name) {
+        if (that != null) {
+            Intent tempIntentSer = new Intent();
+            tempIntentSer.putExtra(Constants.SERVICE_CLASS_NAME, name.getComponent().getClassName());
+            return that.stopService(tempIntentSer);
+        } else
+            return super.stopService(name);
+    }
+
     /**
      * 通过代理去绑定服务
      *

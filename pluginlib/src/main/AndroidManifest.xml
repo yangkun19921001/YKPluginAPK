@@ -4,5 +4,6 @@
     <application>
         <activity android:name=".proxy.ProxyActivity" />
         <receiver android:name=".proxy.ProxyBroadcast" />
+        <service android:name=".proxy.ProxyService" />
     </application>
 </manifest>
